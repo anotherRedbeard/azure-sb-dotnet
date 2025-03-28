@@ -1,0 +1,13 @@
+using './main.bicep'
+
+param subscriptionId = '<subscription-id>'
+param location = '<location>'
+param resourceGroupName = '<resource-group-name>'
+param serviceBusNamespaceName = '<service-bus-namespace-name>'
+param queueName = 'my-test'
+param functionAppName = '<function-app-name>'
+param storageAccountName = '<storage-account-name>'
+param aspName = '<app-service-plan-name>'
+param sku = 'EP1'
+param lawName = '<log-analytics-workspace-name>'
+param appInsightsName = '<app-insights-name>'

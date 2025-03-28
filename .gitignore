@@ -1,3 +1,9 @@
+.DS_Store
+__**.json
+__**__
+deploy.**.sh
+**.**.bicepparam
+
 # Prerequisites
 *.d
 
