@@ -134,7 +134,7 @@ module component 'br/public:avm/res/insights/component:0.4.0' = {
 }
 
 //create storage account
-module storageAccount 'br/public:avm/res/storage/storage-account:0.13.0' = {
+module storageAccount 'br/public:avm/res/storage/storage-account:0.20.0' = {
   name: 'storageAccountDeployment'
   scope: resourceGroup(resourceGroupName)
   dependsOn: [ rg ]
@@ -167,13 +167,6 @@ module site 'br/public:avm/res/web/site:0.6.0' = {
     serverFarmResourceId: serverfarm.outputs.resourceId
     // Non-required parameters
     appInsightResourceId: component.outputs.resourceId
-    appSettingsKeyValuePairs: {
-      AzureFunctionsJobHost__logging__logLevel__default: 'Warning'
-      FUNCTIONS_EXTENSION_VERSION: '~4'
-      FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
-      ServiceBusConnection: serviceBusNamespace.outputs.serviceBusEndpoint
-      redccansbnamespace_SERVICEBUS: listKeys(rootAuthorizationRule.id, '2024-01-01').primaryConnectionString
-    }
     location: location
     siteConfig: {
       numberOfWorkers: 1
@@ -184,5 +177,20 @@ module site 'br/public:avm/res/web/site:0.6.0' = {
     }
     storageAccountResourceId: storageAccount.outputs.resourceId
     storageAccountUseIdentityAuthentication: false
+  }
+}
+
+// Deploy app configuration separately via module
+module appConfigDeployment 'appConfig.bicep' = {
+  name: 'appConfigDeployment'
+  scope: resourceGroup(resourceGroupName)
+  dependsOn: [site, storageAccount, component, site]
+  params: {
+    functionAppName: functionAppName
+    serviceBusEndpoint: serviceBusNamespace.outputs.serviceBusEndpoint
+    serviceBusConnectionString: listKeys(rootAuthorizationRule.id, '2024-01-01').primaryConnectionString
+    appInsightsInstrumentationKey: component.outputs.instrumentationKey
+    appInsightsConnectionString: component.outputs.connectionString
+    storageConnectionString: storageAccount.outputs.primaryConnectionString
   }
 }

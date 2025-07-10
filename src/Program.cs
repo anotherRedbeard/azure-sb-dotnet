@@ -8,6 +8,9 @@ var host = Host.CreateDefaultBuilder()
     .ConfigureFunctionsWebApplication() // Configures the Azure Functions Worker
     .ConfigureServices(services =>
     {
+        // Register Memory Cache for in-memory caching
+        services.AddMemoryCache();
+        
         // Register the Service Bus client
         services.AddSingleton(serviceProvider =>
         {
