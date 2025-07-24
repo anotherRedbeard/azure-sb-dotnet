@@ -22,7 +22,7 @@ resource appSettings 'Microsoft.Web/sites/config@2022-09-01' = {
   properties: {
     // Core Function App settings
     AzureFunctionsJobHost__logging__logLevel__Default: 'Trace'
-    AzureFunctionsJobHost__logging__logLevel__Function: 'Warning'
+    AzureFunctionsJobHost__logging__logLevel__Function: 'Trace'
     AzureFunctionsWorker__logging__LogLevel__default: 'Trace'
     'AzureWebJobs.ServiceBusQueueTrigger1.Disabled': 0
     FUNCTIONS_EXTENSION_VERSION: '~4'

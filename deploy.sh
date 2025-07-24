@@ -17,6 +17,7 @@ elif [ "$1" == "infra" ]; then
 elif [ "$1" == "function" ]; then
     echo "Deploying function"
     cd ./src
+    # You will need to make sure the AzureWebJobsStorage is a valid connection string in your local.settings.json to deploy successfully. UseDevelopmentStorage=true won't work 
     func azure functionapp publish <function-name> --dotnet-version 8.0
     cd ../
 else

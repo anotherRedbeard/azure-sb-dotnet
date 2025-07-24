@@ -70,9 +70,7 @@ public class CacheResponseToUserHttpTrigger
                 value = cacheInfo?.Value,
                 cached_at = cacheInfo?.CachedAt,
                 expires_at = cacheInfo?.ExpiresAt,
-                hit = true,
-                ttl_seconds = cacheInfo?.ExpiresAt != null ? 
-                    Math.Max(0, (cacheInfo.ExpiresAt.Value - DateTimeOffset.UtcNow).TotalSeconds) : (double?)null
+                hit = true
             });
         }
         else
@@ -142,14 +140,14 @@ public class CacheResponseToUserHttpTrigger
         var cacheOptions = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = ttl,
-            SlidingExpiration = TimeSpan.FromMinutes(1), // Reset TTL if accessed within 1 minute
-            Priority = CacheItemPriority.Normal
+            Priority = CacheItemPriority.High
         };
 
         // Add callback when item is removed
         cacheOptions.RegisterPostEvictionCallback((key, value, reason, state) =>
         {
-            _logger.LogInformation("Cache item evicted: Key={Key}, Reason={Reason}", key, reason);
+            _logger.LogWarning("Cache item evicted: Key={Key}, Reason={Reason}, TTL was {TTL} seconds", 
+                key, reason, ttl.TotalSeconds);
         });
 
         _memoryCache.Set(key, cacheItem, cacheOptions);
@@ -197,5 +195,5 @@ public class CacheItem
 {
     public object? Value { get; set; }
     public DateTimeOffset CachedAt { get; set; }
-    public DateTimeOffset? ExpiresAt { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
 }
