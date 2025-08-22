@@ -12,5 +12,15 @@
   "concurrency": {
     "dynamicConcurrencyEnabled": true,
     "snapshotPersistenceEnabled": true
+  },
+  "extensions": {
+    "serviceBus": {
+      "prefetchCount": 20,
+      "messageHandlerOptions": {
+        "maxConcurrentCalls": 20,
+        "autoCompleteMessages": false
+      }
+    }
   }
+
 }

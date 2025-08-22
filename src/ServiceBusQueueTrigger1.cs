@@ -25,6 +25,8 @@ namespace Company.Function
         {
             try 
             {
+                _logger.LogInformation("Running on instance: {InstanceId}", Environment.MachineName);
+                
                 string messageBody = message.Body.ToString();
                 _logger.LogError("***Error***Message Body: {MessageBody}", messageBody);
                 _logger.LogWarning("***Warning***Message Body: {MessageBody}", messageBody);
@@ -33,6 +35,7 @@ namespace Company.Function
                 _logger.LogInformation("Received message: {MessageId},\n Body: {MessageBody}, \n Content-Type: {ContentType}", message.MessageId, messageBody, message.ContentType);
 
                 // Process the message (your logic here)
+                await Task.Delay(TimeSpan.FromSeconds(50)); // Simulate some processing delay
                 
                 // Calculate the duration
                 var enqueuedTime = message.EnqueuedTime.UtcDateTime;
