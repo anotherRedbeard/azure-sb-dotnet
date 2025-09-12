@@ -21,6 +21,8 @@
         "autoCompleteMessages": false
       }
     }
+  },
+  "telemetry": {
+    "logMetrics": true
   }
-
 }

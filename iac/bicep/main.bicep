@@ -176,21 +176,38 @@ module site 'br/public:avm/res/web/site:0.6.0' = {
       minimumElasticInstanceCount: 1
     }
     storageAccountResourceId: storageAccount.outputs.resourceId
-    storageAccountUseIdentityAuthentication: false
+    // Enable identity-based authentication for AzureWebJobsStorage
+    storageAccountUseIdentityAuthentication: true
+    // Enable system-assigned managed identity
+    managedIdentities: {
+      systemAssigned: true
+    }
   }
 }
+
+// Role assignments for storage access (deployed at resource group scope for proper scoping)
+module roleAssignments 'roleAssignments.bicep' = {
+  name: 'roleAssignments'
+  scope: resourceGroup(resourceGroupName)
+  params: {
+    storageAccountName: storageAccountName
+    functionAppName: functionAppName
+    principalId: site.outputs.systemAssignedMIPrincipalId
+  }
+}
+
 
 // Deploy app configuration separately via module
 module appConfigDeployment 'appConfig.bicep' = {
   name: 'appConfigDeployment'
   scope: resourceGroup(resourceGroupName)
-  dependsOn: [site, storageAccount, component, site]
+  dependsOn: [site]
   params: {
     functionAppName: functionAppName
     serviceBusEndpoint: serviceBusNamespace.outputs.serviceBusEndpoint
     serviceBusConnectionString: listKeys(rootAuthorizationRule.id, '2024-01-01').primaryConnectionString
     appInsightsInstrumentationKey: component.outputs.instrumentationKey
     appInsightsConnectionString: component.outputs.connectionString
-    storageConnectionString: storageAccount.outputs.primaryConnectionString
+    storageAccountName: storageAccountName
   }
 }
