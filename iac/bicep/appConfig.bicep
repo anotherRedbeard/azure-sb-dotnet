@@ -1,16 +1,11 @@
 param functionAppName string
-@secure()
-param serviceBusConnectionString string
+// param serviceBusConnectionString string  // (LEGACY) connection string disabled for managed identity
 @secure()
 param serviceBusEndpoint string
 @secure()
 param appInsightsInstrumentationKey string
 @secure()
 param appInsightsConnectionString string
-// storageConnectionString no longer needed for identity auth; kept commented for reference
-// @secure()
-// param storageConnectionString string
-// Keep parameter (unused) to preserve interface with main template (KISS)
 @secure()
 param storageAccountName string
 
@@ -37,6 +32,7 @@ resource appSettings 'Microsoft.Web/sites/config@2022-09-01' = {
     'AzureWebJobs.ServiceBusQueueTrigger1.Disabled': 0
     FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
+    WEBSITE_RUN_FROM_PACKAGE: 1
 
     // Storage settings (identity-based). Host uses managed identity for AzureWebJobsStorage.
     AzureWebJobsStorage__accountName: storageAccountName
@@ -50,7 +46,6 @@ resource appSettings 'Microsoft.Web/sites/config@2022-09-01' = {
     APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     
     // Service Bus settings
-    redccansbnamespace_SERVICEBUS: serviceBusConnectionString
-    ServiceBusConnection: serviceBusEndpoint
+    ServiceBusConnection__fullyQualifiedNamespace: serviceBusEndpoint
   }
 }

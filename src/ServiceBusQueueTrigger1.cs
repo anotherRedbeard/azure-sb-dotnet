@@ -9,17 +9,14 @@ namespace Company.Function
     public class ServiceBusQueueTrigger1
     {
         private readonly ILogger<ServiceBusQueueTrigger1> _logger;
-        private readonly ServiceBusClient _serviceBusClient;
-
-        public ServiceBusQueueTrigger1(ILogger<ServiceBusQueueTrigger1> logger, ServiceBusClient serviceBusClient)
+        public ServiceBusQueueTrigger1(ILogger<ServiceBusQueueTrigger1> logger)
         {
             _logger = logger;
-            _serviceBusClient = serviceBusClient;
         }
 
         [Function(nameof(ServiceBusQueueTrigger1))]
         public async Task Run(
-            [ServiceBusTrigger("my-test", Connection = "redccansbnamespace_SERVICEBUS")]
+            [ServiceBusTrigger("my-test", Connection = "ServiceBusConnection")]
             ServiceBusReceivedMessage message,
             ServiceBusMessageActions messageActions)
         {

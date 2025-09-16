@@ -1,4 +1,7 @@
 .DS_Store
+LogFiles
+deployments
+AzuriteConfig
 *.zip
 __**.json
 __**__

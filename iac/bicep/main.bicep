@@ -193,6 +193,7 @@ module roleAssignments 'roleAssignments.bicep' = {
     storageAccountName: storageAccountName
     functionAppName: functionAppName
     principalId: site.outputs.systemAssignedMIPrincipalId
+    serviceBusNamespaceName: serviceBusNamespaceName
   }
 }
 
@@ -205,7 +206,6 @@ module appConfigDeployment 'appConfig.bicep' = {
   params: {
     functionAppName: functionAppName
     serviceBusEndpoint: serviceBusNamespace.outputs.serviceBusEndpoint
-    serviceBusConnectionString: listKeys(rootAuthorizationRule.id, '2024-01-01').primaryConnectionString
     appInsightsInstrumentationKey: component.outputs.instrumentationKey
     appInsightsConnectionString: component.outputs.connectionString
     storageAccountName: storageAccountName

@@ -8,15 +8,10 @@ var host = Host.CreateDefaultBuilder()
     .ConfigureFunctionsWebApplication() // Configures the Azure Functions Worker
     .ConfigureServices(services =>
     {
-        // Register Memory Cache for in-memory caching
-        services.AddMemoryCache();
-        
-        // Register the Service Bus client
-        services.AddSingleton(serviceProvider =>
-        {
-            var connectionString = Environment.GetEnvironmentVariable("redccansbnamespace_SERVICEBUS");
-            return new ServiceBusClient(connectionString);
-        });
+    // Register Memory Cache for in-memory caching
+    services.AddMemoryCache();
+    // NOTE: Removed custom ServiceBusClient registration since trigger already handles connection
+    // and injected client was unused, causing failures when env vars not set.
 
         // Enable Application Insights
         services.ConfigureFunctionsApplicationInsights();
