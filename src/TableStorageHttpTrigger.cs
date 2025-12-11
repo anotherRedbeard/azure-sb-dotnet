@@ -35,7 +35,6 @@ public class TableStorageHttpTrigger
         try
         {
             TableServiceClient serviceClient;
-            string mode;
 
             bool LooksLikeConnString(string v) =>
                 v.Equals("UseDevelopmentStorage=true", StringComparison.OrdinalIgnoreCase) ||
@@ -47,23 +46,18 @@ public class TableStorageHttpTrigger
             if (!string.IsNullOrWhiteSpace(raw) && LooksLikeConnString(raw))
             {
                 serviceClient = new TableServiceClient(raw);
-                mode = raw.Equals("UseDevelopmentStorage=true", StringComparison.OrdinalIgnoreCase)
-                    ? "ConnString-Azurite"
-                    : "ConnString";
             }
             // 2. Identity with explicit tableServiceUri
             else if (!string.IsNullOrWhiteSpace(tableServiceUri) &&
                     Uri.TryCreate(tableServiceUri, UriKind.Absolute, out var tsUri))
             {
                 serviceClient = new TableServiceClient(tsUri, new DefaultAzureCredential());
-                mode = "AAD-tableServiceUri";
             }
             // 3. Identity with accountName
             else if (!string.IsNullOrWhiteSpace(accountName))
             {
                 var endpointUri = new Uri($"https://{accountName}.table.core.windows.net");
                 serviceClient = new TableServiceClient(endpointUri, new DefaultAzureCredential());
-                mode = "AAD-accountName";
             }
             else
             {
